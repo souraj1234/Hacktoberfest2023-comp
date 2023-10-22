@@ -1,0 +1,45 @@
+import java.util.*;
+import java.io.*;
+
+public class Solution {
+
+    public static long sort(long low, long mid, long high, long[] a) {
+        long i = low, j = mid + 1, k = 0;
+        long temp[] = new long[(int)(high - low + 1)];
+        long count = 0;
+
+        while (i <= mid && j <= high) {
+            if (a[(int)i] > a[(int)j]) {
+                count += mid - i + 1; // till mid array is sorted
+                temp[(int)(k++)] = a[(int)(j++)];
+            } else
+                temp[(int)(k++)] = a[(int)(i++)];
+        }
+
+        while (i <= mid)
+            temp[(int)(k++)] = a[(int)(i++)];
+        while (j <= high)
+            temp[(int)(k++)] = a[(int)(j++)];
+
+        for (i = low, j = 0; i <= high; i++, j++)
+            a[(int)(i)] = temp[(int)(j)];
+
+        return count;
+    }
+
+    public static long merging(long low, long high, long[] a) {
+        long count = 0;
+        if (low < high) {
+            long mid = low + (high - low) / 2;
+            count += merging(low, mid, a);
+            count += merging(mid + 1, high, a);
+            count += sort(low, mid, high, a);
+        }
+        return count;
+    }
+
+    public static long getInversions(long[] a, long n) {
+        long low = 0, high = n - 1;
+        return merging(low, high, a);
+    }
+}
